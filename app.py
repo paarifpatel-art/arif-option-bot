@@ -1,69 +1,68 @@
-from flask import Flask, jsonify, render_template_string
-import datetime
-
+from flask import Flask, jsonify, make_response
 app = Flask(__name__)
 
-HTML = '''
+HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ARIF OPTION BOT - LIVE</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ARIF OPTION BOT</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ARIF BOT">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
 <style>
-body{background:#000;color:#fff;font-family:Arial;text-align:center;padding:20px;margin:0}
-.card{background:linear-gradient(135deg,#0f0f0f,#1a1a1a);border:1px solid #00ff88;border-radius:20px;padding:20px;margin:15px auto;max-width:400px;box-shadow:0 0 20px #00ff8855}
-.live{color:#00ff88;font-weight:bold;animation:blink 1s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.btn{background:#00ff88;color:#000;padding:15px 30px;border-radius:30px;border:none;font-weight:bold;font-size:18px;width:90%;max-width:300px;margin:10px;cursor:pointer}
-h1{color:#00ff88}
-.price{font-size:32px;font-weight:bold;margin:10px}
+body{background:#000;color:#fff;font-family:system-ui;text-align:center;padding:20px}
+.card{border:2px solid #00ff88;border-radius:20px;padding:20px;margin:20px 0;box-shadow:0 0 20px #00ff8855}
+.btn{padding:18px 30px;border-radius:50px;border:none;font-weight:900;font-size:18px;width:90%;margin:10px}
+.green{background:#00ff88;color:#000}
+.gray{background:#333;color:#fff}
+.live{color:#00ff88;animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
 </style>
 </head>
 <body>
-<h1>ARIF OPTION BOT</h1>
+<div class="live">● LIVE - PERMISSION GRANTED</div>
+<h2>Owner: ARIF BHAI</h2>
 <div class="card">
-<p class="live">● LIVE - PERMISSION GRANTED</p>
-<p>Owner: <b>ARIF BHAI</b></p>
-<p id="time"></p>
+<h1 style="font-size:42px;margin:10px">52,340.20 <span style="color:#00ff88">UP 0.8%</span></h1>
+<p>Target: 52,500 | SL: 52,100</p>
 </div>
-<div class="card">
-<p>NIFTY 50</p>
-<div class="price">24,568.75 UP 1.2%</div>
-<p>Signal: <b style="color:#00ff88">BANKNIFTY 52000 CE BUY</b></p>
-</div>
-<div class="card">
-<p>BANK NIFTY</p>
-<div class="price">52,340.20 UP 0.8%</div>
-<p>Target: <b>52,500</b> | SL: <b>52,100</b></p>
-</div>
-<button class="btn" onclick="alert('Signal Generated! BUY BANKNIFTY 52000 CE')">GET TODAY SIGNAL 📈</button>
-<button class="btn" style="background:#fff" onclick="location.reload()">REFRESH LIVE 🔄</button>
-<p style="margin-top:30px;color:#888">Bot ID: arif-option-bot<br>GitHub: paarifpatel-art<br>Status: GRANTED ✓</p>
+<button class="btn green" onclick="alert('NIFTY 50 CE BUY - 52,500 Target!')">GET TODAY SIGNAL 📈</button>
+<button class="btn gray" onclick="location.reload()">REFRESH LIVE 🔄</button>
+<p style="opacity:0.5;margin-top:20px">Bot ID: arif-option-bot<br>GitHub: paarifpatel-art<br>Status: GRANTED ✓</p>
+<p style="margin-top:30px;font-size:12px;opacity:0.3">arif-option-bot.onrender.com</p>
 <script>
-function updateTime(){
- document.getElementById('time').innerText = new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
-}
-setInterval(updateTime,1000);
-updateTime();
+if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}
 </script>
 </body>
 </html>
-'''
+"""
 
 @app.route('/')
-def home():
-    return render_template_string(HTML)
+def home(): return HTML
 
-@app.route('/api')
-def api():
-    return jsonify({
-        "bot": "arif-option-bot",
-        "github": "paarifpatel-art",
-        "owner": "ARIF BHAI",
-        "permission": "GRANTED",
-        "status": "LIVE",
-        "time": datetime.datetime.now().isoformat()
-    })
+@app.route('/manifest.json')
+def manifest():
+    m = {
+      "name": "ARIF OPTION BOT",
+      "short_name": "ARIF BOT",
+      "start_url": "/",
+      "display": "standalone",
+      "background_color": "#000000",
+      "theme_color": "#00ff88",
+      "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/3135/3135715.png","sizes": "512x512","type": "image/png"}]
+    }
+    return jsonify(m)
+
+@app.route('/sw.js')
+def sw():
+    js = "self.addEventListener('fetch', function(e){})"
+    r = make_response(js)
+    r.headers['Content-Type'] = 'application/javascript'
+    return r
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    app.run()
