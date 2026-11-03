@@ -1,5 +1,6 @@
 Flask
-gunicorn
-requests
-smartapi-python
+SmartApi-Python
 pyotp
+requests
+pandas
+logzero
