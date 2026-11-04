@@ -7,16 +7,14 @@ app = Flask(__name__)
 API_KEY = "ymmvd2t2"
 CLIENT_ID = "A748605"
 PASSWORD = "7233"
-TOTP_SECRET = "G5SN3LR7LVJYUFUIQKIN2CQCJ"
+TOTP_SECRET = "G5SN3LR7LVJYUFUIQKIN2CQCJU"
 
 def get_totp():
     try:
         clean = TOTP_SECRET.strip().upper()
-        # Agar secret kharab hai to padding fix try karo
         fixed = clean + "=" * (-len(clean) % 8)
         return pyotp.TOTP(fixed).now()
     except Exception:
-        # Nakli secret hai to dummy code de do, app nahi girega
         return "123456"
 
 def angel_login():
