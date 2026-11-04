@@ -34,6 +34,10 @@ def angel_login():
 def home():
     return "Arif Solid Bot LIVE - Trade With Patel Sahab"
 
+@app.route("/api/totp")
+def show_totp():
+    return jsonify({"bot_totp": get_totp(), "time": datetime.now().strftime("%H:%M:%S")})
+
 @app.route("/api/signal")
 def signal():
     login_status = angel_login()
