@@ -11,9 +11,11 @@ TOTP_SECRET = "G5SN3LR7LVJYUFUIQKIN2CQCJ"
 
 def angel_login():
     try:
-        # SmartApi ko andar import kiya hai, taaki logzero error se app na gire
         from SmartApi import SmartConnect
-        totp_code = pyotp.TOTP(TOTP_SECRET).now()
+        # TOTP Padding Fix - nakli/asli dono pe chalega
+        clean_secret = TOTP_SECRET.strip().upper()
+        fixed_secret = clean_secret + "=" * (-len(clean_secret) % 8)
+        totp_code = pyotp.TOTP(fixed_secret).now()
         obj = SmartConnect(api_key=API_KEY)
         session = obj.generateSession(CLIENT_ID, PASSWORD, totp_code)
         if session['status'] == True:
