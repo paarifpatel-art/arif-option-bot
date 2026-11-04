@@ -9,13 +9,20 @@ CLIENT_ID = "A748605"
 PASSWORD = "7233"
 TOTP_SECRET = "G5SN3LR7LVJYUFUIQKIN2CQCJ"
 
+def get_totp():
+    try:
+        clean = TOTP_SECRET.strip().upper()
+        # Agar secret kharab hai to padding fix try karo
+        fixed = clean + "=" * (-len(clean) % 8)
+        return pyotp.TOTP(fixed).now()
+    except Exception:
+        # Nakli secret hai to dummy code de do, app nahi girega
+        return "123456"
+
 def angel_login():
     try:
         from SmartApi import SmartConnect
-        # TOTP Padding Fix - nakli/asli dono pe chalega
-        clean_secret = TOTP_SECRET.strip().upper()
-        fixed_secret = clean_secret + "=" * (-len(clean_secret) % 8)
-        totp_code = pyotp.TOTP(fixed_secret).now()
+        totp_code = get_totp()
         obj = SmartConnect(api_key=API_KEY)
         session = obj.generateSession(CLIENT_ID, PASSWORD, totp_code)
         if session['status'] == True:
