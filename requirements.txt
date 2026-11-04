@@ -1,6 +1,5 @@
-Flask
-SmartApi-Python
+Flask==3.0.0
+gunicorn==21.2.0
+smartapi-python
 pyotp
 requests
-pandas
-logzero
