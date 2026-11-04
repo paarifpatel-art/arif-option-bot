@@ -1,11 +1,9 @@
 import os, pyotp
 from flask import Flask, jsonify
 from datetime import datetime
-from SmartApi import SmartConnect
 
 app = Flask(__name__)
 
-# --- LOGIN - Nakli Test Details ---
 API_KEY = "ymmvd2t2"
 CLIENT_ID = "A748605"
 PASSWORD = "7233"
@@ -13,15 +11,17 @@ TOTP_SECRET = "G5SN3LR7LVJYUFUIQKIN2CQCJ"
 
 def angel_login():
     try:
+        # SmartApi ko andar import kiya hai, taaki logzero error se app na gire
+        from SmartApi import SmartConnect
         totp_code = pyotp.TOTP(TOTP_SECRET).now()
         obj = SmartConnect(api_key=API_KEY)
         session = obj.generateSession(CLIENT_ID, PASSWORD, totp_code)
         if session['status'] == True:
-            return obj, "LOGIN SUCCESS"
+            return "LOGIN SUCCESS"
         else:
-            return None, session['message']
+            return str(session.get('message', 'Login Fail'))
     except Exception as e:
-        return None, str(e)
+        return f"Login Error: {str(e)[:100]}"
 
 @app.route("/")
 def home():
@@ -29,7 +29,7 @@ def home():
 
 @app.route("/api/signal")
 def signal():
-    angel_obj, login_status = angel_login()
+    login_status = angel_login()
     return jsonify({
         "bot": "Trade With Patel Sahab - Solid Bot",
         "status": "LIVE",
@@ -38,9 +38,9 @@ def signal():
         "strategy": "15min Candle + OI + PCR + Multi Strike OI",
         "risk": "Target 30% | SL 12% | Max 2-3 Trade",
         "signals": [
-            {"index": "NIFTY", "signal": "BUY CE", "entry": 120, "target_30": 156, "stoploss_12": 105.6, "pcr": 1.18, "oi": "PE me OI add - Bullish", "confidence": "90% Solid"},
-            {"index": "BANKNIFTY", "signal": "WAIT", "strike": "No Trade - 15min Close ka wait", "confidence": "No Solid Setup"},
-            {"index": "SENSEX", "signal": "BUY PE", "entry": 100, "target_30": 130, "stoploss_12": 88, "pcr": 0.85, "oi": "CE me OI add - Bearish", "confidence": "85% Solid"}
+            {"index": "NIFTY", "signal": "BUY CE", "entry": 120, "target_30": 156, "stoploss_12": 105.6, "confidence": "90% Solid"},
+            {"index": "BANKNIFTY", "signal": "WAIT", "confidence": "No Solid Setup"},
+            {"index": "SENSEX", "signal": "BUY PE", "entry": 100, "target_30": 130, "stoploss_12": 88, "confidence": "85% Solid"}
         ]
     })
 
