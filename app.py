@@ -2,7 +2,7 @@ import os
 import random
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask, jsonify
 import requests
 
@@ -47,7 +47,7 @@ def get_dynamic_signal():
     oi_change = round(sys_random.uniform(5.0, 18.5), 1)
     conf = sys_random.randint(72, 94)
 
-    return f"""🔥 LIVE SIGNAL - {datetime.now().strftime('%I:%M:%S %p')} 🔥
+    🔥 LIVE SIGNAL - {(datetime.now() + timedelta(hours=5, minutes=30)).strftime("%I:%M:%S %p")}
 
 Symbol: {symbol} @ {live_price}
 Side: {side}
