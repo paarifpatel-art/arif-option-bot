@@ -35,12 +35,12 @@ def get_nifty_data():
     # NIFTY ka asli price + VWAP nikalenge
     try:
         # 26000 = NIFTY Spot Token
-        ltp = smart.ltpData("NSE", "NIFTY", "26000")['data']['ltp']
+        ltp = smart.ltpData("NSE", "NIFTY", "99926000")['data']['ltp']
         
         # Pichle 15min ke candle leke VWAP banayenge
         params = {
             "exchange": "NSE",
-            "symboltoken": "26000",
+            "symboltoken": "99926000",
             "interval": "FIFTEEN_MINUTE",
             "fromdate": datetime.now().strftime("%Y-%m-%d 09:15"),
             "todate": datetime.now().strftime("%Y-%m-%d %H:%M")
