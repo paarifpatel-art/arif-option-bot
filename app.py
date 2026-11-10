@@ -11,11 +11,11 @@ from SmartApi import SmartConnect
 app = Flask(__name__)
 
 # --- DETAILS SIRF ENV SE AAYEGI, CODE ME KABHI MAT LIKHNA ---
-API_KEY = os.environ.get("ymmvtd2t")
-CLIENT_CODE = os.environ.get("A748605")
-PASSWORD = os.environ.get("7233")
-TOTP_SECRET = os.environ.get("G5SN3LR7LVJUYFUIQKIN2CQCJU")
-TELEGRAM_TOKEN = os.environ.get("8760898163:AAEMgX69Z2tvXGuTw9_dmN4xIB0FVWJXNDA")
+API_KEY = os.environ.get("API_KEY")
+CLIENT_CODE = os.environ.get("CLIENT_CODE")
+PASSWORD = os.environ.get("PASSWORD")
+TOTP_SECRET = os.environ.get("TOTP_SECRET")
+TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 
 smart = None
 
