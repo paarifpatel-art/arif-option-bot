@@ -3,7 +3,8 @@ import threading
 import time
 import pyotp
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+IST = timezone(timedelta(hours=5, minutes=30))
 from flask import Flask, jsonify
 import requests
 from SmartApi import SmartConnect
@@ -80,7 +81,7 @@ def get_pcr_oi():
         return 1.0, 0
 
 def get_real_signal():
-    now = datetime.now()
+    now = datetime.now(IST)
     time_str = now.strftime("%H:%M")
     
     # LOCK 1: Market Time Check - 9:20 se pehle aur 3:00 ke baad NO TRADE
@@ -162,7 +163,7 @@ def telegram_polling():
 
 @app.route("/")
 def home():
-    return jsonify({"status": "LIVE BOT - REAL DATA", "time": datetime.now().strftime("%H:%M:%S")})
+    return jsonify({"status": "LIVE BOT - REAL DATA", "time": datetime.now(IST).strftime("%H:%M:%S")})
 
 @app.route("/signal")
 def web_signal():
