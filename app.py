@@ -43,11 +43,11 @@ def get_nifty_data():
             "exchange": "NSE",
             "symboltoken": "99926000",
             "interval": "FIFTEEN_MINUTE",
-            "fromdate": datetime.now().strftime("%Y-%m-%d 09:15"),
-            "todate": datetime.now().strftime("%Y-%m-%d %H:%M")
+            "fromdate": datetime.now(IST).strftime("%Y-%m-%d 09:15"),
+            "todate": datetime.now(IST).strftime("%Y-%m-%d %H:%M")
         }
         candles = smart.getCandleData(params)['data']
-        df = pd.DataFrame(candles, columns=['time','open','high','low','close','volume'])
+        df = pd.DataFrame(candles["data"], columns=['time','open','high','low','close','volume'])
         # VWAP = Typical Price * Volume / Total Volume
         df['tp'] = (df['high'] + df['low'] + df['close']) / 3
         vwap = round((df['tp'] * df['volume']).sum() / df['volume'].sum(), 2)
